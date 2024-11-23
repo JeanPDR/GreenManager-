@@ -54,11 +54,7 @@ function createCarousel(filter) {
 
   container.innerHTML = `
     <div class="carousel">
-      ${
-        filteredPoints.length > 5
-          ? '<button class="carousel-btn prev" id="prevBtn">&lt;</button>'
-          : ""
-      }
+      <button class="carousel-btn prev" id="prevBtn">&lt;</button>
       <div class="carousel-track">
         ${filteredPoints
           .map(
@@ -69,7 +65,7 @@ function createCarousel(filter) {
               <h3>${point.name}</h3>
               <p>${point.address}</p>
               <p>CEP: ${point.cep}</p>
-              <p>${point.type}</p>
+              <p>Tipo: ${point.type}</p>
               <button class="contact-btn" onclick="centerOnMap(${point.lat}, ${point.lng})">Ver no Mapa</button>
             </div>
           </div>
@@ -77,16 +73,11 @@ function createCarousel(filter) {
           )
           .join("")}
       </div>
-      ${
-        filteredPoints.length > 5
-          ? '<button class="carousel-btn next" id="nextBtn">&gt;</button>'
-          : ""
-      }
+      <button class="carousel-btn next" id="nextBtn">&gt;</button>
     </div>
   `;
-  if (filteredPoints.length > 5) {
-    addCarouselFunctionality(filteredPoints);
-  }
+
+  addCarouselFunctionality(filteredPoints);
 }
 
 function addCarouselFunctionality(points) {
@@ -95,15 +86,24 @@ function addCarouselFunctionality(points) {
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
 
-  currentIndex = 0;
+  let currentIndex = 0;
 
   function updateCarousel() {
-    const cardWidth = cards[0].offsetWidth + 20;
+    const cardStyle = getComputedStyle(cards[0]);
+    const cardWidth =
+      cards[0].offsetWidth +
+      parseInt(cardStyle.marginLeft) +
+      parseInt(cardStyle.marginRight);
+    const visibleWidth = track.parentElement.offsetWidth;
+    const visibleCards = Math.floor(visibleWidth / cardWidth);
+    const maxIndex = Math.max(0, cards.length - visibleCards);
+
+    currentIndex = Math.min(currentIndex, maxIndex);
+
     track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
 
     prevBtn.disabled = currentIndex === 0;
-    nextBtn.disabled =
-      currentIndex >= points.length - Math.floor(track.clientWidth / cardWidth);
+    nextBtn.disabled = currentIndex === maxIndex;
 
     prevBtn.style.opacity = prevBtn.disabled ? "0.5" : "1";
     nextBtn.style.opacity = nextBtn.disabled ? "0.5" : "1";
@@ -117,11 +117,22 @@ function addCarouselFunctionality(points) {
   });
 
   nextBtn.addEventListener("click", () => {
-    if (currentIndex < points.length - 1) {
+    const cardStyle = getComputedStyle(cards[0]);
+    const cardWidth =
+      cards[0].offsetWidth +
+      parseInt(cardStyle.marginLeft) +
+      parseInt(cardStyle.marginRight);
+    const visibleWidth = track.parentElement.offsetWidth;
+    const visibleCards = Math.floor(visibleWidth / cardWidth);
+    const maxIndex = Math.max(0, cards.length - visibleCards);
+
+    if (currentIndex < maxIndex) {
       currentIndex++;
       updateCarousel();
     }
   });
+
+  window.addEventListener("resize", updateCarousel);
 
   updateCarousel();
 }
@@ -194,7 +205,7 @@ document.getElementById("registerForm").addEventListener("submit", (e) => {
             .getAttribute("data-filter")
         );
         e.target.reset();
-        modal.classList.add("hidden");
+        document.getElementById("modal").classList.add("hidden");
       } else {
         alert("Endereço inválido.");
       }
