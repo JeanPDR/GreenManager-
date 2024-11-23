@@ -22,6 +22,7 @@ function addMarkerToMap(point) {
       <h3>${point.name}</h3>
       <p>Tipo: ${point.type}</p>
       <p>Endereço: ${point.address}</p>
+      <p>CEP: ${point.cep}</p>
       <img src="${point.image}" alt="${point.name}" style="width:100%; max-width:200px; margin-top:10px;" />
     `,
   });
@@ -48,6 +49,7 @@ function createCard(point) {
     <div class="card-body">
       <h3>${point.name}</h3>
       <p>${point.address}</p>
+      <p>CEP: ${point.cep}</p>
       <p>${point.type}</p>
       <button class="contact-btn">Ver no Mapa</button>
     </div>
@@ -56,17 +58,6 @@ function createCard(point) {
   card.querySelector(".contact-btn").addEventListener("click", () => {
     map.setCenter({ lat: point.lat, lng: point.lng });
     map.setZoom(15);
-  });
-}
-
-function filterCards(filter) {
-  const cards = document.querySelectorAll(".card");
-  cards.forEach((card) => {
-    if (filter === "all" || card.getAttribute("data-type") === filter) {
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
   });
 }
 
@@ -80,6 +71,17 @@ document.getElementById("filterBar").addEventListener("click", (e) => {
     filterCards(filter);
   }
 });
+
+function filterCards(filter) {
+  const cards = document.querySelectorAll(".card");
+  cards.forEach((card) => {
+    if (filter === "all" || card.getAttribute("data-type") === filter) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
 
 document.getElementById("searchBtn").addEventListener("click", () => {
   const address = document.getElementById("searchInput").value;
@@ -109,6 +111,7 @@ document.getElementById("registerForm").addEventListener("submit", (e) => {
           name: data.firstName,
           type: data.type,
           address: data.address,
+          cep: data.cep,
           lat: location.lat(),
           lng: location.lng(),
           image: reader.result,
