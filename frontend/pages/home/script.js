@@ -1,6 +1,4 @@
-// Mock para armazenar os pontos de coleta
 const collectionPoints = [];
-
 let map;
 let markers = [];
 
@@ -9,7 +7,6 @@ function initMap() {
     center: { lat: -23.55052, lng: -46.633308 },
     zoom: 12,
   });
-
   loadMockPoints();
 }
 
@@ -19,7 +16,6 @@ function addMarkerToMap(point) {
     map,
     title: point.name,
   });
-
   const infoWindow = new google.maps.InfoWindow({
     content: `
       <h3>${point.name}</h3>
@@ -28,11 +24,9 @@ function addMarkerToMap(point) {
       <p>Email: ${point.email}</p>
     `,
   });
-
   marker.addListener("click", () => {
     infoWindow.open(map, marker);
   });
-
   markers.push(marker);
 }
 
@@ -41,6 +35,21 @@ function loadMockPoints() {
     addMarkerToMap(point);
   });
 }
+
+function searchAddress() {
+  const address = document.getElementById("searchInput").value;
+  const geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ address }, (results, status) => {
+    if (status === "OK") {
+      map.setCenter(results[0].geometry.location);
+      map.setZoom(15);
+    } else {
+      alert("Endereço não encontrado.");
+    }
+  });
+}
+
+document.getElementById("searchBtn").addEventListener("click", searchAddress);
 
 const openModalBtn = document.getElementById("openModalBtn");
 const closeModalBtn = document.getElementById("closeModalBtn");
@@ -61,15 +70,12 @@ cancelModalBtn.addEventListener("click", () => {
 
 document.getElementById("registerForm").addEventListener("submit", (e) => {
   e.preventDefault();
-
   const formData = new FormData(e.target);
   const data = Object.fromEntries(formData);
-
   const geocoder = new google.maps.Geocoder();
   geocoder.geocode({ address: data.address }, (results, status) => {
     if (status === "OK") {
       const location = results[0].geometry.location;
-
       const newPoint = {
         name: data.firstName,
         type: data.type,
@@ -78,17 +84,12 @@ document.getElementById("registerForm").addEventListener("submit", (e) => {
         lat: location.lat(),
         lng: location.lng(),
       };
-
       collectionPoints.push(newPoint);
-
       addMarkerToMap(newPoint);
-
-      console.log("Ponto de coleta adicionado:", newPoint);
-
       modal.classList.add("hidden");
       e.target.reset();
     } else {
-      alert("Endereço inválido. Por favor, verifique e tente novamente.");
+      alert("Endereço inválido.");
     }
   });
 });

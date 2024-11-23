@@ -7,9 +7,15 @@
     <link rel="stylesheet" href="../home/styles.css" />
   </head>
   <body>
-    <div class="container">
-      <button id="openModalBtn" class="open-modal-btn">Cadastrar</button>
+    <div class="search-bar">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Buscar por endereço..."
+      />
+      <button id="searchBtn">Buscar</button>
     </div>
+    <button id="openModalBtn" class="open-modal-btn">Cadastrar</button>
     <div id="modal" class="modal hidden">
       <div class="modal-content">
         <span class="close-btn" id="closeModalBtn">&times;</span>
@@ -35,6 +41,10 @@
               <option value="eletronicos">Eletrônicos</option>
             </select>
           </div>
+          <div class="form-group">
+            <label for="image">Imagem do Ponto</label>
+            <input type="file" id="image" name="image" accept="image/*" />
+          </div>
           <button type="submit" class="add-btn">Adicionar</button>
           <button type="button" class="cancel-btn" id="cancelModalBtn">
             Cancelar
@@ -42,10 +52,7 @@
         </form>
       </div>
     </div>
-
     <div id="map" style="width: 100%; height: 500px; margin-top: 20px"></div>
-
-    <!-- Script para Google Maps -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSkCJaEm9fvl47b-eKWNy8qJ4X7B5qGXU&libraries=places"></script>
     <script src="script.js"></script>
   </body>
