@@ -1,1 +1,0 @@
-const helloword = "Olá Mundo";
