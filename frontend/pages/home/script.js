@@ -1,5 +1,6 @@
 let map;
 let markers = [];
+let currentIndex = 0;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
@@ -35,16 +36,31 @@ function loadMockPoints() {
   collectionPoints.forEach((point) => {
     addMarkerToMap(point);
   });
-  createCarousel();
+  createCarousel("all");
 }
 
-function createCarousel() {
+function createCarousel(filter) {
   const container = document.getElementById("cardsContainer");
+  const filteredPoints =
+    filter === "all"
+      ? collectionPoints
+      : collectionPoints.filter((point) => point.type === filter);
+
+  if (filteredPoints.length === 0) {
+    container.innerHTML =
+      "<p style='text-align: center; padding: 20px;'>Nenhum ponto encontrado.</p>";
+    return;
+  }
+
   container.innerHTML = `
     <div class="carousel">
-      <button class="carousel-btn prev" id="prevBtn">&lt;</button>
+      ${
+        filteredPoints.length > 5
+          ? '<button class="carousel-btn prev" id="prevBtn">&lt;</button>'
+          : ""
+      }
       <div class="carousel-track">
-        ${collectionPoints
+        ${filteredPoints
           .map(
             (point) => `
           <div class="carousel-card" data-type="${point.type}">
@@ -61,23 +77,36 @@ function createCarousel() {
           )
           .join("")}
       </div>
-      <button class="carousel-btn next" id="nextBtn">&gt;</button>
+      ${
+        filteredPoints.length > 5
+          ? '<button class="carousel-btn next" id="nextBtn">&gt;</button>'
+          : ""
+      }
     </div>
   `;
-  addCarouselFunctionality();
+  if (filteredPoints.length > 5) {
+    addCarouselFunctionality(filteredPoints);
+  }
 }
 
-function addCarouselFunctionality() {
+function addCarouselFunctionality(points) {
   const track = document.querySelector(".carousel-track");
   const cards = document.querySelectorAll(".carousel-card");
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
 
-  let currentIndex = 0;
+  currentIndex = 0;
 
   function updateCarousel() {
     const cardWidth = cards[0].offsetWidth + 20;
     track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled =
+      currentIndex >= points.length - Math.floor(track.clientWidth / cardWidth);
+
+    prevBtn.style.opacity = prevBtn.disabled ? "0.5" : "1";
+    nextBtn.style.opacity = nextBtn.disabled ? "0.5" : "1";
   }
 
   prevBtn.addEventListener("click", () => {
@@ -88,7 +117,7 @@ function addCarouselFunctionality() {
   });
 
   nextBtn.addEventListener("click", () => {
-    if (currentIndex < cards.length - 1) {
+    if (currentIndex < points.length - 1) {
       currentIndex++;
       updateCarousel();
     }
@@ -120,20 +149,9 @@ document.getElementById("filterBar").addEventListener("click", (e) => {
       .forEach((btn) => btn.classList.remove("active"));
     e.target.classList.add("active");
     const filter = e.target.getAttribute("data-filter");
-    filterCards(filter);
+    createCarousel(filter);
   }
 });
-
-function filterCards(filter) {
-  const cards = document.querySelectorAll(".carousel-card");
-  cards.forEach((card) => {
-    if (filter === "all" || card.getAttribute("data-type") === filter) {
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
-  });
-}
 
 document.getElementById("searchBtn").addEventListener("click", () => {
   const address = document.getElementById("searchInput").value;
@@ -170,7 +188,11 @@ document.getElementById("registerForm").addEventListener("submit", (e) => {
         };
         collectionPoints.push(newPoint);
         addMarkerToMap(newPoint);
-        createCarousel();
+        createCarousel(
+          document
+            .querySelector(".filter-btn.active")
+            .getAttribute("data-filter")
+        );
         e.target.reset();
         modal.classList.add("hidden");
       } else {
