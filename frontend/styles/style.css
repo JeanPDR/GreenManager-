@@ -1,0 +1,138 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ecfdf5;
+}
+
+.header {
+    text-align: center;
+    background-color: #ecfdf5;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+h1,
+h2,
+p,
+button {
+    font-family: "Playfair Display", serif;
+}
+
+.header-primary {
+    margin-top: 1rem;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #064e3b;
+    border-bottom: 1rem;
+}
+
+.header-secondary {
+    font-weight: 400;
+    font-size: 1.4rem;
+    color: #064e3b;
+}
+
+.header-input {
+    height: 2rem;
+    width: 70%;
+    border-radius: 0.3rem;
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    border-color: #064e3b;
+}
+
+.hero {
+    background-color: #064e3b;
+}
+
+.hero-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem 1.2rem 2rem 1.2rem;
+}
+
+.hero-cta{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #ecfdf5;
+}
+
+.hero-cta h2{
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.hero-cta p{
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.hero-btn{
+    padding: .7rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    background-color: #65A30D;
+    color: #ecfdf5;
+    cursor: pointer;
+}
+
+.hero-btn:hover{
+    background-color: #064e3b;
+}
+
+.hero-img img{
+    width: 300px;
+    height: 300px;
+    border-radius: 10px;
+}
+
+@media (min-width: 768px) {
+    .header-primary {
+        font-size: 3.5rem;
+    }
+
+    .header-secondary {
+        font-size: 1.8rem;
+    }
+
+    .header-input {
+        width: 50%;
+        font-size: 1rem;
+    }
+
+    .hero-box{
+        flex-direction: row;
+    }
+
+    .hero-cta{
+        margin-right: 2rem;
+    }
+
+    .hero-cta h2{
+        font-size: 3.5rem;
+    }
+
+    .hero-cta p{
+        font-size: 2rem;
+    }
+
+    .hero-btn{
+        font-size: 1.5rem;
+        padding: 1rem;
+        border-radius: 8px;
+    }
+
+    .hero-img img{
+        width: 600px;
+        height: 600px;
+    }
+}
