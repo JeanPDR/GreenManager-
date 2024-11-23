@@ -1,6 +1,6 @@
-const collectionPoints = [];
 let map;
 let markers = [];
+let currentIndex = 0;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
@@ -8,6 +8,7 @@ function initMap() {
     zoom: 12,
   });
   loadMockPoints();
+  getUserLocation();
 }
 
 function addMarkerToMap(point) {
@@ -21,7 +22,7 @@ function addMarkerToMap(point) {
       <h3>${point.name}</h3>
       <p>Tipo: ${point.type}</p>
       <p>Endereço: ${point.address}</p>
-      <p>Email: ${point.email}</p>
+      <p>CEP: ${point.cep}</p>
       <img src="${point.image}" alt="${point.name}" style="width:100%; max-width:200px; margin-top:10px;" />
     `,
   });
@@ -35,9 +36,135 @@ function loadMockPoints() {
   collectionPoints.forEach((point) => {
     addMarkerToMap(point);
   });
+  createCarousel("all");
 }
 
-function searchAddress() {
+function createCarousel(filter) {
+  const container = document.getElementById("cardsContainer");
+  const filteredPoints =
+    filter === "all"
+      ? collectionPoints
+      : collectionPoints.filter((point) => point.type === filter);
+
+  if (filteredPoints.length === 0) {
+    container.innerHTML =
+      "<p style='text-align: center; padding: 20px;'>Nenhum ponto encontrado.</p>";
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="carousel">
+      <button class="carousel-btn prev" id="prevBtn">&lt;</button>
+      <div class="carousel-track">
+        ${filteredPoints
+          .map(
+            (point) => `
+          <div class="carousel-card" data-type="${point.type}">
+            <img src="${point.image}" alt="${point.name}" class="card-image">
+            <div class="card-body">
+              <h3>${point.name}</h3>
+              <p>${point.address}</p>
+              <p>CEP: ${point.cep}</p>
+              <p>Tipo: ${point.type}</p>
+              <button class="contact-btn" onclick="centerOnMap(${point.lat}, ${point.lng})">Ver no Mapa</button>
+            </div>
+          </div>
+        `
+          )
+          .join("")}
+      </div>
+      <button class="carousel-btn next" id="nextBtn">&gt;</button>
+    </div>
+  `;
+
+  addCarouselFunctionality(filteredPoints);
+}
+
+function addCarouselFunctionality(points) {
+  const track = document.querySelector(".carousel-track");
+  const cards = document.querySelectorAll(".carousel-card");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  let currentIndex = 0;
+
+  function updateCarousel() {
+    const cardStyle = getComputedStyle(cards[0]);
+    const cardWidth =
+      cards[0].offsetWidth +
+      parseInt(cardStyle.marginLeft) +
+      parseInt(cardStyle.marginRight);
+    const visibleWidth = track.parentElement.offsetWidth;
+    const visibleCards = Math.floor(visibleWidth / cardWidth);
+    const maxIndex = Math.max(0, cards.length - visibleCards);
+
+    currentIndex = Math.min(currentIndex, maxIndex);
+
+    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === maxIndex;
+
+    prevBtn.style.opacity = prevBtn.disabled ? "0.5" : "1";
+    nextBtn.style.opacity = nextBtn.disabled ? "0.5" : "1";
+  }
+
+  prevBtn.addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateCarousel();
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    const cardStyle = getComputedStyle(cards[0]);
+    const cardWidth =
+      cards[0].offsetWidth +
+      parseInt(cardStyle.marginLeft) +
+      parseInt(cardStyle.marginRight);
+    const visibleWidth = track.parentElement.offsetWidth;
+    const visibleCards = Math.floor(visibleWidth / cardWidth);
+    const maxIndex = Math.max(0, cards.length - visibleCards);
+
+    if (currentIndex < maxIndex) {
+      currentIndex++;
+      updateCarousel();
+    }
+  });
+
+  window.addEventListener("resize", updateCarousel);
+
+  updateCarousel();
+}
+
+function centerOnMap(lat, lng) {
+  map.setCenter({ lat, lng });
+  map.setZoom(15);
+}
+
+function getUserLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const userLat = position.coords.latitude;
+      const userLng = position.coords.longitude;
+      map.setCenter({ lat: userLat, lng: userLng });
+      map.setZoom(14);
+    });
+  }
+}
+
+document.getElementById("filterBar").addEventListener("click", (e) => {
+  if (e.target.classList.contains("filter-btn")) {
+    document
+      .querySelectorAll(".filter-btn")
+      .forEach((btn) => btn.classList.remove("active"));
+    e.target.classList.add("active");
+    const filter = e.target.getAttribute("data-filter");
+    createCarousel(filter);
+  }
+});
+
+document.getElementById("searchBtn").addEventListener("click", () => {
   const address = document.getElementById("searchInput").value;
   const geocoder = new google.maps.Geocoder();
   geocoder.geocode({ address }, (results, status) => {
@@ -48,25 +175,6 @@ function searchAddress() {
       alert("Endereço não encontrado.");
     }
   });
-}
-
-document.getElementById("searchBtn").addEventListener("click", searchAddress);
-
-const openModalBtn = document.getElementById("openModalBtn");
-const closeModalBtn = document.getElementById("closeModalBtn");
-const cancelModalBtn = document.getElementById("cancelModalBtn");
-const modal = document.getElementById("modal");
-
-openModalBtn.addEventListener("click", () => {
-  modal.classList.remove("hidden");
-});
-
-closeModalBtn.addEventListener("click", () => {
-  modal.classList.add("hidden");
-});
-
-cancelModalBtn.addEventListener("click", () => {
-  modal.classList.add("hidden");
 });
 
 document.getElementById("registerForm").addEventListener("submit", (e) => {
@@ -84,21 +192,38 @@ document.getElementById("registerForm").addEventListener("submit", (e) => {
           name: data.firstName,
           type: data.type,
           address: data.address,
-          email: data.email,
+          cep: data.cep,
           lat: location.lat(),
           lng: location.lng(),
           image: reader.result,
         };
         collectionPoints.push(newPoint);
         addMarkerToMap(newPoint);
-        modal.classList.add("hidden");
+        createCarousel(
+          document
+            .querySelector(".filter-btn.active")
+            .getAttribute("data-filter")
+        );
         e.target.reset();
+        document.getElementById("modal").classList.add("hidden");
       } else {
         alert("Endereço inválido.");
       }
     });
   };
   reader.readAsDataURL(file);
+});
+
+document.getElementById("openModalBtn").addEventListener("click", () => {
+  document.getElementById("modal").classList.remove("hidden");
+});
+
+document.getElementById("closeModalBtn").addEventListener("click", () => {
+  document.getElementById("modal").classList.add("hidden");
+});
+
+document.getElementById("cancelModalBtn").addEventListener("click", () => {
+  document.getElementById("modal").classList.add("hidden");
 });
 
 window.onload = initMap;
