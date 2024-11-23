@@ -22,6 +22,7 @@ function addMarkerToMap(point) {
       <p>Tipo: ${point.type}</p>
       <p>Endereço: ${point.address}</p>
       <p>Email: ${point.email}</p>
+      <img src="${point.image}" alt="${point.name}" style="width:100%; max-width:200px; margin-top:10px;" />
     `,
   });
   marker.addListener("click", () => {
@@ -71,27 +72,33 @@ cancelModalBtn.addEventListener("click", () => {
 document.getElementById("registerForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const formData = new FormData(e.target);
-  const data = Object.fromEntries(formData);
-  const geocoder = new google.maps.Geocoder();
-  geocoder.geocode({ address: data.address }, (results, status) => {
-    if (status === "OK") {
-      const location = results[0].geometry.location;
-      const newPoint = {
-        name: data.firstName,
-        type: data.type,
-        address: data.address,
-        email: data.email,
-        lat: location.lat(),
-        lng: location.lng(),
-      };
-      collectionPoints.push(newPoint);
-      addMarkerToMap(newPoint);
-      modal.classList.add("hidden");
-      e.target.reset();
-    } else {
-      alert("Endereço inválido.");
-    }
-  });
+  const file = formData.get("image");
+  const reader = new FileReader();
+  reader.onload = () => {
+    const data = Object.fromEntries(formData);
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ address: data.address }, (results, status) => {
+      if (status === "OK") {
+        const location = results[0].geometry.location;
+        const newPoint = {
+          name: data.firstName,
+          type: data.type,
+          address: data.address,
+          email: data.email,
+          lat: location.lat(),
+          lng: location.lng(),
+          image: reader.result,
+        };
+        collectionPoints.push(newPoint);
+        addMarkerToMap(newPoint);
+        modal.classList.add("hidden");
+        e.target.reset();
+      } else {
+        alert("Endereço inválido.");
+      }
+    });
+  };
+  reader.readAsDataURL(file);
 });
 
 window.onload = initMap;
