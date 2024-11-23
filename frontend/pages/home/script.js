@@ -42,6 +42,7 @@ function createCard(point) {
   const container = document.getElementById("cardsContainer");
   const card = document.createElement("div");
   card.classList.add("card");
+  card.setAttribute("data-type", point.type);
   card.innerHTML = `
     <img src="${point.image}" alt="${point.name}" class="card-image">
     <div class="card-body">
@@ -58,16 +59,27 @@ function createCard(point) {
   });
 }
 
-function getUserLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const userLat = position.coords.latitude;
-      const userLng = position.coords.longitude;
-      map.setCenter({ lat: userLat, lng: userLng });
-      map.setZoom(14);
-    });
-  }
+function filterCards(filter) {
+  const cards = document.querySelectorAll(".card");
+  cards.forEach((card) => {
+    if (filter === "all" || card.getAttribute("data-type") === filter) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
 }
+
+document.getElementById("filterBar").addEventListener("click", (e) => {
+  if (e.target.classList.contains("filter-btn")) {
+    document
+      .querySelectorAll(".filter-btn")
+      .forEach((btn) => btn.classList.remove("active"));
+    e.target.classList.add("active");
+    const filter = e.target.getAttribute("data-filter");
+    filterCards(filter);
+  }
+});
 
 document.getElementById("searchBtn").addEventListener("click", () => {
   const address = document.getElementById("searchInput").value;
@@ -115,15 +127,15 @@ document.getElementById("registerForm").addEventListener("submit", (e) => {
 });
 
 document.getElementById("openModalBtn").addEventListener("click", () => {
-  modal.classList.remove("hidden");
+  document.getElementById("modal").classList.remove("hidden");
 });
 
 document.getElementById("closeModalBtn").addEventListener("click", () => {
-  modal.classList.add("hidden");
+  document.getElementById("modal").classList.add("hidden");
 });
 
 document.getElementById("cancelModalBtn").addEventListener("click", () => {
-  modal.classList.add("hidden");
+  document.getElementById("modal").classList.add("hidden");
 });
 
 window.onload = initMap;
