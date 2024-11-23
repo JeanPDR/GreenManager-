@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pontos de Coleta</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://maps.googleapis.com/maps/api/js?key=MINHA_API&libraries=places"></script>
+  </head>
+  <body>
+    <div class="continer">
+      <h1>Cadastro de Pontos de Coleta</h1>
+      <form id="collectionForm">
+        <label for="name">Nome do Ponto de Coleta:</label>
+        <input type="text" name="name" id="name" required />
+
+        <label for="type">Tipo de Coleta</label>
+        <select name="type" id="type" required>
+          <option value="reciclaveis">Reciclaveis</option>
+          <option value="organicos">Organicos</option>
+          <option value="eletronico">Eletrônicos</option>
+        </select>
+
+        <label for="address">Endereço:</label>
+        <input
+          type="text"
+          id="address"
+          name="address"
+          placeholder="Digite o Endereço"
+          required
+        />
+        <button type="submit">Cadastrar</button>
+      </form>
+      <div id="map"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
