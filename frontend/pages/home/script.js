@@ -34,30 +34,72 @@ function addMarkerToMap(point) {
 function loadMockPoints() {
   collectionPoints.forEach((point) => {
     addMarkerToMap(point);
-    createCard(point);
   });
+  createCarousel();
 }
 
-function createCard(point) {
+function createCarousel() {
   const container = document.getElementById("cardsContainer");
-  const card = document.createElement("div");
-  card.classList.add("card");
-  card.setAttribute("data-type", point.type);
-  card.innerHTML = `
-    <img src="${point.image}" alt="${point.name}" class="card-image">
-    <div class="card-body">
-      <h3>${point.name}</h3>
-      <p>${point.address}</p>
-      <p>CEP: ${point.cep}</p>
-      <p>${point.type}</p>
-      <button class="contact-btn">Ver no Mapa</button>
+  container.innerHTML = `
+    <div class="carousel">
+      <button class="carousel-btn prev" id="prevBtn">&lt;</button>
+      <div class="carousel-track">
+        ${collectionPoints
+          .map(
+            (point) => `
+          <div class="carousel-card" data-type="${point.type}">
+            <img src="${point.image}" alt="${point.name}" class="card-image">
+            <div class="card-body">
+              <h3>${point.name}</h3>
+              <p>${point.address}</p>
+              <p>CEP: ${point.cep}</p>
+              <p>${point.type}</p>
+              <button class="contact-btn" onclick="centerOnMap(${point.lat}, ${point.lng})">Ver no Mapa</button>
+            </div>
+          </div>
+        `
+          )
+          .join("")}
+      </div>
+      <button class="carousel-btn next" id="nextBtn">&gt;</button>
     </div>
   `;
-  container.appendChild(card);
-  card.querySelector(".contact-btn").addEventListener("click", () => {
-    map.setCenter({ lat: point.lat, lng: point.lng });
-    map.setZoom(15);
+  addCarouselFunctionality();
+}
+
+function addCarouselFunctionality() {
+  const track = document.querySelector(".carousel-track");
+  const cards = document.querySelectorAll(".carousel-card");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  let currentIndex = 0;
+
+  function updateCarousel() {
+    const cardWidth = cards[0].offsetWidth + 20;
+    track.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+  }
+
+  prevBtn.addEventListener("click", () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateCarousel();
+    }
   });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIndex < cards.length - 1) {
+      currentIndex++;
+      updateCarousel();
+    }
+  });
+
+  updateCarousel();
+}
+
+function centerOnMap(lat, lng) {
+  map.setCenter({ lat, lng });
+  map.setZoom(15);
 }
 
 function getUserLocation() {
@@ -83,7 +125,7 @@ document.getElementById("filterBar").addEventListener("click", (e) => {
 });
 
 function filterCards(filter) {
-  const cards = document.querySelectorAll(".card");
+  const cards = document.querySelectorAll(".carousel-card");
   cards.forEach((card) => {
     if (filter === "all" || card.getAttribute("data-type") === filter) {
       card.style.display = "block";
@@ -128,7 +170,7 @@ document.getElementById("registerForm").addEventListener("submit", (e) => {
         };
         collectionPoints.push(newPoint);
         addMarkerToMap(newPoint);
-        createCard(newPoint);
+        createCarousel();
         e.target.reset();
         modal.classList.add("hidden");
       } else {
