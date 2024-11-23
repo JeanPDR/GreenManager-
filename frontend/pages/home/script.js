@@ -8,6 +8,7 @@ function initMap() {
     zoom: 12,
   });
   loadMockPoints();
+  getUserLocation();
 }
 
 function addMarkerToMap(point) {
@@ -21,7 +22,6 @@ function addMarkerToMap(point) {
       <h3>${point.name}</h3>
       <p>Tipo: ${point.type}</p>
       <p>Endereço: ${point.address}</p>
-      <p>Email: ${point.email}</p>
       <img src="${point.image}" alt="${point.name}" style="width:100%; max-width:200px; margin-top:10px;" />
     `,
   });
@@ -34,10 +34,42 @@ function addMarkerToMap(point) {
 function loadMockPoints() {
   collectionPoints.forEach((point) => {
     addMarkerToMap(point);
+    createCard(point);
   });
 }
 
-function searchAddress() {
+function createCard(point) {
+  const container = document.getElementById("cardsContainer");
+  const card = document.createElement("div");
+  card.classList.add("card");
+  card.innerHTML = `
+    <img src="${point.image}" alt="${point.name}" class="card-image">
+    <div class="card-body">
+      <h3>${point.name}</h3>
+      <p>${point.address}</p>
+      <p>${point.type}</p>
+      <button class="contact-btn">Ver no Mapa</button>
+    </div>
+  `;
+  container.appendChild(card);
+  card.querySelector(".contact-btn").addEventListener("click", () => {
+    map.setCenter({ lat: point.lat, lng: point.lng });
+    map.setZoom(15);
+  });
+}
+
+function getUserLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const userLat = position.coords.latitude;
+      const userLng = position.coords.longitude;
+      map.setCenter({ lat: userLat, lng: userLng });
+      map.setZoom(14);
+    });
+  }
+}
+
+document.getElementById("searchBtn").addEventListener("click", () => {
   const address = document.getElementById("searchInput").value;
   const geocoder = new google.maps.Geocoder();
   geocoder.geocode({ address }, (results, status) => {
@@ -48,25 +80,6 @@ function searchAddress() {
       alert("Endereço não encontrado.");
     }
   });
-}
-
-document.getElementById("searchBtn").addEventListener("click", searchAddress);
-
-const openModalBtn = document.getElementById("openModalBtn");
-const closeModalBtn = document.getElementById("closeModalBtn");
-const cancelModalBtn = document.getElementById("cancelModalBtn");
-const modal = document.getElementById("modal");
-
-openModalBtn.addEventListener("click", () => {
-  modal.classList.remove("hidden");
-});
-
-closeModalBtn.addEventListener("click", () => {
-  modal.classList.add("hidden");
-});
-
-cancelModalBtn.addEventListener("click", () => {
-  modal.classList.add("hidden");
 });
 
 document.getElementById("registerForm").addEventListener("submit", (e) => {
@@ -84,21 +97,33 @@ document.getElementById("registerForm").addEventListener("submit", (e) => {
           name: data.firstName,
           type: data.type,
           address: data.address,
-          email: data.email,
           lat: location.lat(),
           lng: location.lng(),
           image: reader.result,
         };
         collectionPoints.push(newPoint);
         addMarkerToMap(newPoint);
-        modal.classList.add("hidden");
+        createCard(newPoint);
         e.target.reset();
+        modal.classList.add("hidden");
       } else {
         alert("Endereço inválido.");
       }
     });
   };
   reader.readAsDataURL(file);
+});
+
+document.getElementById("openModalBtn").addEventListener("click", () => {
+  modal.classList.remove("hidden");
+});
+
+document.getElementById("closeModalBtn").addEventListener("click", () => {
+  modal.classList.add("hidden");
+});
+
+document.getElementById("cancelModalBtn").addEventListener("click", () => {
+  modal.classList.add("hidden");
 });
 
 window.onload = initMap;
