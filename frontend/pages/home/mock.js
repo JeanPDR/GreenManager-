@@ -6,7 +6,7 @@ const collectionPoints = [
     cep: "01001-000",
     lat: -23.55052,
     lng: -46.633308,
-    image: "https://via.placeholder.com/200?text=Recicláveis",
+    image: "https://vault.pulsarimagens.com.br/file/preview/43JPR006.jpg",
   },
   {
     name: "Ponto de Coleta 2",
@@ -15,7 +15,7 @@ const collectionPoints = [
     cep: "20040-001",
     lat: -22.906847,
     lng: -43.172896,
-    image: "https://via.placeholder.com/200?text=Orgânicos",
+    image: "https://vault.pulsarimagens.com.br/file/preview/43JPR006.jpg",
   },
   {
     name: "Ponto de Coleta 3",
@@ -24,7 +24,7 @@ const collectionPoints = [
     cep: "30190-000",
     lat: -19.916681,
     lng: -43.934493,
-    image: "https://via.placeholder.com/200?text=Eletrônicos",
+    image: "https://vault.pulsarimagens.com.br/file/preview/43JPR006.jpg",
   },
   {
     name: "Ponto de Coleta 4",
@@ -33,7 +33,7 @@ const collectionPoints = [
     cep: "90040-000",
     lat: -30.034647,
     lng: -51.217658,
-    image: "https://via.placeholder.com/200?text=Recicláveis",
+    image: "https://vault.pulsarimagens.com.br/file/preview/43JPR006.jpg",
   },
   {
     name: "Ponto de Coleta 5",
@@ -42,7 +42,7 @@ const collectionPoints = [
     cep: "40020-000",
     lat: -12.971399,
     lng: -38.501274,
-    image: "https://via.placeholder.com/200?text=Orgânicos",
+    image: "https://vault.pulsarimagens.com.br/file/preview/43JPR006.jpg",
   },
   {
     name: "Ponto de Coleta 6",
@@ -51,7 +51,7 @@ const collectionPoints = [
     cep: "70040-000",
     lat: -15.826691,
     lng: -47.92182,
-    image: "https://via.placeholder.com/200?text=Eletrônicos",
+    image: "https://vault.pulsarimagens.com.br/file/preview/43JPR006.jpg",
   },
   {
     name: "Ponto de Coleta 7",
@@ -60,7 +60,7 @@ const collectionPoints = [
     cep: "50040-000",
     lat: -8.047562,
     lng: -34.877003,
-    image: "https://via.placeholder.com/200?text=Recicláveis",
+    image: "https://vault.pulsarimagens.com.br/file/preview/43JPR006.jpg",
   },
   {
     name: "Ponto de Coleta 8",
@@ -69,7 +69,7 @@ const collectionPoints = [
     cep: "80040-000",
     lat: -25.428954,
     lng: -49.267137,
-    image: "https://via.placeholder.com/200?text=Orgânicos",
+    image: "https://vault.pulsarimagens.com.br/file/preview/43JPR006.jpg",
   },
   {
     name: "Ponto de Coleta 9",
@@ -78,7 +78,7 @@ const collectionPoints = [
     cep: "69040-000",
     lat: -3.119028,
     lng: -60.021731,
-    image: "https://via.placeholder.com/200?text=Eletrônicos",
+    image: "https://vault.pulsarimagens.com.br/file/preview/43JPR006.jpg",
   },
   {
     name: "Ponto de Coleta 10",
@@ -87,6 +87,6 @@ const collectionPoints = [
     cep: "60040-000",
     lat: -3.717221,
     lng: -38.543369,
-    image: "https://via.placeholder.com/200?text=Recicláveis",
+    image: "https://vault.pulsarimagens.com.br/file/preview/43JPR006.jpg",
   },
 ];
