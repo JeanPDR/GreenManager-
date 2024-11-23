@@ -1,4 +1,3 @@
-const collectionPoints = [];
 let map;
 let markers = [];
 
@@ -59,6 +58,17 @@ function createCard(point) {
     map.setCenter({ lat: point.lat, lng: point.lng });
     map.setZoom(15);
   });
+}
+
+function getUserLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const userLat = position.coords.latitude;
+      const userLng = position.coords.longitude;
+      map.setCenter({ lat: userLat, lng: userLng });
+      map.setZoom(14);
+    });
+  }
 }
 
 document.getElementById("filterBar").addEventListener("click", (e) => {
