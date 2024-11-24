@@ -87,6 +87,15 @@ button {
     cursor: pointer;
 }
 
+.hero-btn a{
+    color: #ecfdf5;
+    text-decoration: none;
+}
+
+.hero-btn a:hover{
+    text-decoration-line: underline;
+}
+
 .hero-btn:hover {
     background-color: #064e3b;
 }
