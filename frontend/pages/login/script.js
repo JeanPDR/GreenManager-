@@ -1,19 +1,15 @@
-// Função para obter usuários do localStorage
 function getUsers() {
   const users = localStorage.getItem("users");
   return users ? JSON.parse(users) : [];
 }
 
-// Função para salvar usuário no localStorage
 function saveUser(user) {
   const users = getUsers();
   users.push(user);
   localStorage.setItem("users", JSON.stringify(users));
 }
 
-// Evento de submissão do formulário de cadastro
 if (document.getElementById("register-form")) {
-  // Manipulação da exibição dos campos adicionais
   const pontoSim = document.getElementById("ponto-sim");
   const pontoNao = document.getElementById("ponto-nao");
   const pontoColetaFields = document.getElementById("ponto-coleta-fields");
@@ -27,11 +23,11 @@ if (document.getElementById("register-form")) {
   function togglePontoColetaFields() {
     if (pontoSim.checked) {
       pontoColetaFields.style.display = "block";
-      // Tornar os campos obrigatórios
+
       setPontoColetaFieldsRequired(true);
     } else {
       pontoColetaFields.style.display = "none";
-      // Remover obrigatoriedade dos campos
+
       setPontoColetaFieldsRequired(false);
     }
   }
@@ -51,7 +47,6 @@ if (document.getElementById("register-form")) {
       const email = document.getElementById("register-email").value;
       const password = document.getElementById("register-password").value;
 
-      // Dados do ponto de coleta (se aplicável)
       let pontoColeta = null;
       if (pontoSim.checked) {
         const nome = document.getElementById("estabelecimento-nome").value;
@@ -69,7 +64,6 @@ if (document.getElementById("register-form")) {
           return;
         }
 
-        // Converter imagens em Base64 para armazenamento (apenas para fins de demonstração)
         const imagensArray = [];
         let imagensProcessadas = 0;
 
@@ -79,7 +73,6 @@ if (document.getElementById("register-form")) {
             imagensArray.push(e.target.result);
             imagensProcessadas++;
             if (imagensProcessadas === imagens.length) {
-              // Após ler todas as imagens, continuar com o cadastro
               pontoColeta = {
                 nome,
                 endereco,
@@ -97,7 +90,6 @@ if (document.getElementById("register-form")) {
       }
 
       function realizarCadastro() {
-        // Simular chamada à API para cadastro
         mockRegisterAPI(email, password, pontoColeta).then((response) => {
           alert(response.message);
           if (response.success) {
@@ -109,7 +101,6 @@ if (document.getElementById("register-form")) {
     });
 }
 
-// Evento de submissão do formulário de login
 if (document.getElementById("login-form")) {
   document
     .getElementById("login-form")
@@ -118,18 +109,15 @@ if (document.getElementById("login-form")) {
       const email = document.getElementById("login-email").value;
       const password = document.getElementById("login-password").value;
 
-      // Simular chamada à API para login
       mockLoginAPI(email, password).then((response) => {
         alert(response.message);
         if (response.success) {
-          // Redirecionar para /pages/home/ após login bem-sucedido
           window.location.href = "/frontend/pages/home/";
         }
       });
     });
 }
 
-// Função para simular chamada à API de cadastro
 function mockRegisterAPI(email, password, pontoColeta) {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -146,7 +134,6 @@ function mockRegisterAPI(email, password, pontoColeta) {
   });
 }
 
-// Função para simular chamada à API de login
 function mockLoginAPI(email, password) {
   return new Promise((resolve) => {
     setTimeout(() => {
