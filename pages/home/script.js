@@ -132,16 +132,7 @@ function addCarouselFunctionality(points) {
   });
 
   nextBtn.addEventListener("click", () => {
-    const cardStyle = getComputedStyle(cards[0]);
-    const cardWidth =
-      cards[0].offsetWidth +
-      parseInt(cardStyle.marginLeft) +
-      parseInt(cardStyle.marginRight);
-    const visibleWidth = track.parentElement.offsetWidth;
-    const visibleCards = Math.floor(visibleWidth / cardWidth);
-    const maxIndex = Math.max(0, cards.length - visibleCards);
-
-    if (currentIndex < maxIndex) {
+    if (currentIndex < cards.length) {
       currentIndex++;
       updateCarousel();
     }
@@ -181,12 +172,44 @@ document.getElementById("filterBar").addEventListener("click", async (e) => {
 });
 
 document.getElementById("searchBtn").addEventListener("click", async () => {
-  const query = document.getElementById("searchInput").value.toLowerCase();
-  const points = await fetchPointsFromAPI();
-  const filteredPoints = points.filter((point) =>
-    point.address.toLowerCase().includes(query)
-  );
-  createCarousel("all", filteredPoints);
+  const query = document.getElementById("searchInput").value.trim();
+
+  if (!query) {
+    alert("Por favor, insira um endereço.");
+    return;
+  }
+
+  const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+    query
+  )}&key=AIzaSyBSkCJaEm9fvl47b-eKWNy8qJ4X7B5qGXU`;
+
+  try {
+    const response = await fetch(geocodeUrl);
+    const data = await response.json();
+
+    if (data.status !== "OK" || data.results.length === 0) {
+      alert("Endereço não encontrado. Tente novamente.");
+      return;
+    }
+
+    const location = data.results[0].geometry.location;
+    map.setCenter(location);
+    map.setZoom(14);
+
+    const points = await fetchPointsFromAPI();
+    const filteredPoints = points.filter((point) => {
+      const distance = google.maps.geometry.spherical.computeDistanceBetween(
+        new google.maps.LatLng(point.lat, point.lng),
+        new google.maps.LatLng(location.lat, location.lng)
+      );
+      return distance <= 5000;
+    });
+
+    createCarousel("all", filteredPoints);
+  } catch (error) {
+    console.error("Erro ao buscar o endereço:", error);
+    alert("Erro ao buscar o endereço. Tente novamente.");
+  }
 });
 
 window.onload = initMap;
