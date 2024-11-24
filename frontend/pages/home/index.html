@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/frontend/assets/favicon.ico" type="image/x-icon">
+    <title>Green Manager</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/frontend/styles/coleta.css" />
+  </head>
+  <body>
+    <header>
+      <div class="search-bar">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Buscar por endereço..."
+        />
+        <button id="searchBtn">Buscar</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="map"></div>
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="reciclaveis">
+          Recicláveis
+        </button>
+        <button class="filter-btn" data-filter="organicos">Orgânicos</button>
+        <button class="filter-btn" data-filter="eletronicos">
+          Eletrônicos
+        </button>
+      </div>
+      <div class="cards-container" id="cardsContainer"></div>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSkCJaEm9fvl47b-eKWNy8qJ4X7B5qGXU&libraries=places"></script>
+  </body>
+</html>
