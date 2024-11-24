@@ -56,6 +56,6 @@ Este projeto está sob a licença [MIT](LICENSE).
 
 ## 📞 Contato
 
-- **Autor**: [JeanPDR](https://github.com/JeanPDR) [Juan Santos](https://github.com/Juan-s-moreira)
+- **Autores**: [JeanPDR](https://github.com/JeanPDR) [Juan Santos](https://github.com/Juan-s-moreira)
 
 Contribua e ajude a tornar o mundo mais sustentável! 🌱
