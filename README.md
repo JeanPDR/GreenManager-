@@ -1,8 +1,10 @@
-# Green Manager **Gestão de Resíduos - Aplicativo Web**
+# Green Manager FrontEnd 🌿
 
 ## Descrição do Projeto
 
 O **GreenManager Gestão de Resíduos** é uma plataforma web que auxilia empresas e indivíduos no gerenciamento e reciclagem de resíduos de forma eficiente. Através de uma interface amigável e intuitiva, o aplicativo permite o monitoramento, categorização e destinação correta de resíduos, promovendo práticas mais sustentáveis.
+
+
 
 ---
 
