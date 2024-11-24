@@ -16,47 +16,44 @@ O **GreenManager Gestão de Resíduos** é uma plataforma web que auxilia empres
 
 #### **Funcionalidades do Frontend**
 
-1. Cadastro de resíduos (por tipo e categoria).
+1. Listar ponto de coleta em diferentes localidades.
 2. Interface clara para empresas e indivíduos.
-
----
-
-### **Backend**
-
-- **Node.js com Express**
-  - O backend gerencia a lógica do aplicativo, oferecendo uma API para interações entre usuários e o banco de dados.
-
-#### **Funcionalidades do Backend**
-
-1. Autenticação e gerenciamento de usuários (**Pendente**).
-2. Processamento de dados sobre resíduos recicláveis.
 
 ---
 
 ## **Diferenciais do Projeto**
 
 1. Promove a conscientização ambiental.
-2. Facilita a conexão com empresas de reciclagem.
-3. Gera relatórios detalhados sobre o impacto sustentável.
-4. Suporte à gamificação para engajar usuários.
-
+2. Facilita a conexão com empresas e pontos de reciclagem.
 ---
 
-## **Paleta de Cores**
+## 🛠️ Contribuindo
 
-| Cor            | Código Hexadecimal |
-| -------------- | ------------------ |
-| Verde Floresta | #3A6351            |
-| Azul Celeste   | #8ABAD3            |
-| Branco Puro    | #FFFFFF            |
-| Cinza Médio    | #707070            |
-| Verde Pastel   | #C9E4CA            |
-
----
-
-## **Como Contribuir**
-
-1. Clone o repositório:
+1. Faça um fork do projeto.
+2. Crie um branch para sua feature:
    ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git checkout -b minha-feature
    ```
+3. Faça commit das alterações:
+   ```bash
+   git commit -m 'Minha nova feature'
+   ```
+4. Envie o código:
+   ```bash
+   git push origin minha-feature
+   ```
+5. Abra um Pull Request.
+
+---
+
+## 📜 Licença
+
+Este projeto está sob a licença [MIT](LICENSE).
+
+---
+
+## 📞 Contato
+
+- **Autor**: [JeanPDR](https://github.com/JeanPDR) [Juan Santos](https://github.com/Juan-s-moreira)
+
+Contribua e ajude a tornar o mundo mais sustentável! 🌱
