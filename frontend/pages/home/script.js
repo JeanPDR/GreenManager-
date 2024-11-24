@@ -1,8 +1,7 @@
-const API_URL = "http://localhost:3000/api/pontos";
-
 let map;
 let markers = [];
-let currentIndex = 0;
+
+const API_URL = "http://localhost:3000/api/pontos";
 
 async function fetchPointsFromAPI() {
   try {
@@ -169,73 +168,25 @@ function getUserLocation() {
   }
 }
 
-async function addPointToAPI(data) {
-  try {
-    const geocoder = new google.maps.Geocoder();
-    const geocodeResult = await new Promise((resolve, reject) => {
-      geocoder.geocode({ address: data.address }, (results, status) => {
-        if (status === "OK") {
-          resolve(results[0].geometry.location);
-        } else {
-          reject(`Erro ao geocodificar endereço: ${status}`);
-        }
-      });
-    });
-
-    data.lat = geocodeResult.lat();
-    data.lng = geocodeResult.lng();
-
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    if (!response.ok) {
-      throw new Error("Erro ao cadastrar ponto de coleta.");
-    }
-    const newPoint = await response.json();
-    return newPoint;
-  } catch (error) {
-    console.error(error);
-    throw error;
+document.getElementById("filterBar").addEventListener("click", async (e) => {
+  if (e.target.classList.contains("filter-btn")) {
+    document
+      .querySelectorAll(".filter-btn")
+      .forEach((btn) => btn.classList.remove("active"));
+    e.target.classList.add("active");
+    const filter = e.target.getAttribute("data-filter");
+    const points = await fetchPointsFromAPI();
+    createCarousel(filter, points);
   }
-}
-
-document
-  .getElementById("registerForm")
-  .addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = {
-      name: formData.get("firstName"),
-      address: formData.get("address"),
-      cep: formData.get("cep"),
-      type: formData.get("type"),
-      image: formData.get("image"),
-    };
-
-    try {
-      const newPoint = await addPointToAPI(data);
-      addMarkerToMap(newPoint);
-      const points = await fetchPointsFromAPI();
-      createCarousel("all", points);
-      e.target.reset();
-      document.getElementById("modal").classList.add("hidden");
-    } catch (error) {
-      alert("Erro ao cadastrar ponto de coleta.");
-    }
-  });
-
-document.getElementById("openModalBtn").addEventListener("click", () => {
-  document.getElementById("modal").classList.remove("hidden");
 });
 
-document.getElementById("closeModalBtn").addEventListener("click", () => {
-  document.getElementById("modal").classList.add("hidden");
-});
-
-document.getElementById("cancelModalBtn").addEventListener("click", () => {
-  document.getElementById("modal").classList.add("hidden");
+document.getElementById("searchBtn").addEventListener("click", async () => {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const points = await fetchPointsFromAPI();
+  const filteredPoints = points.filter((point) =>
+    point.address.toLowerCase().includes(query)
+  );
+  createCarousel("all", filteredPoints);
 });
 
 window.onload = initMap;

@@ -20,7 +20,6 @@
         />
         <button id="searchBtn">Buscar</button>
       </div>
-      <button id="openModalBtn" class="open-modal-btn">Cadastrar</button>
     </header>
 
     <main>
@@ -38,50 +37,6 @@
       <div class="cards-container" id="cardsContainer"></div>
     </main>
 
-    <div id="modal" class="modal hidden">
-      <div class="modal-content">
-        <span class="close-btn" id="closeModalBtn">&times;</span>
-        <h2>Cadastro</h2>
-        <form id="registerForm" enctype="multipart/form-data">
-          <div class="form-group">
-            <label for="firstName">Nome do Ponto de Coleta</label>
-            <input type="text" id="firstName" name="firstName" required />
-          </div>
-          <div class="form-group">
-            <label for="address">Endereço do Ponto de Coleta</label>
-            <input type="text" id="address" name="address" required />
-          </div>
-          <div class="form-group">
-            <label for="cep">CEP</label>
-            <input type="text" id="cep" name="cep" required />
-          </div>
-          <div class="form-group">
-            <label for="type">Tipo de Coleta:</label>
-            <select id="type" name="type" required>
-              <option value="reciclaveis">Recicláveis</option>
-              <option value="organicos">Orgânicos</option>
-              <option value="eletronicos">Eletrônicos</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="image">Link da Imagem</label>
-            <input
-              type="url"
-              id="image"
-              name="image"
-              placeholder="https://exemplo.com/imagem.jpg"
-              required
-            />
-          </div>
-          <button type="submit" class="add-btn">Adicionar</button>
-          <button type="button" class="cancel-btn" id="cancelModalBtn">
-            Cancelar
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <script src="mock.js"></script>
     <script src="script.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBSkCJaEm9fvl47b-eKWNy8qJ4X7B5qGXU&libraries=places"></script>
   </body>
