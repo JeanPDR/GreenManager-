@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="register-container">
+      <h2>Cadastro</h2>
+      <form id="register-form">
+        <label for="register-name">Nome:</label>
+        <input type="text" id="register-name" required />
+
+        <label for="register-email">Email:</label>
+        <input type="email" id="register-email" required />
+
+        <label for="register-password">Senha:</label>
+        <input type="password" id="register-password" required />
+
+        <label for="register-confirm-password">Confirme a Senha:</label>
+        <input type="password" id="register-confirm-password" required />
+
+        <label>Você possui um ponto de coleta?</label>
+        <div>
+          <input
+            type="radio"
+            id="ponto-sim"
+            name="ponto-coleta"
+            value="sim"
+            required
+          />
+          <label for="ponto-sim">Sim</label>
+          <input type="radio" id="ponto-nao" name="ponto-coleta" value="não" />
+          <label for="ponto-nao">Não</label>
+        </div>
+
+        <button type="submit">Cadastrar</button>
+      </form>
+      <p>
+        Já tem uma conta?
+        <a href="/frontend/pages/login/index.html">Faça login</a>
+      </p>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
