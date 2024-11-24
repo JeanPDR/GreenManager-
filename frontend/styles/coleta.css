@@ -44,7 +44,7 @@ header {
 .search-bar button {
   padding: 10px 15px;
   margin-left: 10px;
-  background-color: #28a745;
+  background-color: #65a30d;
   color: #ffffff;
   border: none;
   border-radius: 4px;
@@ -95,7 +95,7 @@ main {
 }
 
 .filter-btn.active {
-  background-color: #007bff;
+  background-color: #65a30d;
   color: #ffffff;
 }
 
