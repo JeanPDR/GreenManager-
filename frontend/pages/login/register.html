@@ -9,11 +9,17 @@
     <div id="register-container">
       <h2>Cadastro</h2>
       <form id="register-form">
+        <label for="register-name">Nome:</label>
+        <input type="text" id="register-name" required />
+
         <label for="register-email">Email:</label>
         <input type="email" id="register-email" required />
 
         <label for="register-password">Senha:</label>
         <input type="password" id="register-password" required />
+
+        <label for="register-confirm-password">Confirme a Senha:</label>
+        <input type="password" id="register-confirm-password" required />
 
         <label>Você possui um ponto de coleta?</label>
         <div>
@@ -27,34 +33,6 @@
           <label for="ponto-sim">Sim</label>
           <input type="radio" id="ponto-nao" name="ponto-coleta" value="não" />
           <label for="ponto-nao">Não</label>
-        </div>
-
-        <div id="ponto-coleta-fields" style="display: none">
-          <label for="estabelecimento-nome">Nome do Estabelecimento:</label>
-          <input type="text" id="estabelecimento-nome" required />
-
-          <label for="estabelecimento-endereco">Endereço:</label>
-          <input type="text" id="estabelecimento-endereco" required />
-
-          <label for="estabelecimento-cep">CEP:</label>
-          <input type="text" id="estabelecimento-cep" required />
-
-          <label for="tipo-ponto">Tipo do Ponto de Coleta:</label>
-          <select id="tipo-ponto" required>
-            <option value="">Selecione...</option>
-            <option value="Recicláveis">Recicláveis</option>
-            <option value="Orgânicos">Orgânicos</option>
-            <option value="Eletrônicos">Eletrônicos</option>
-          </select>
-
-          <label>Imagens do Estabelecimento (4 imagens obrigatórias):</label>
-          <input
-            type="file"
-            id="imagens-estabelecimento"
-            accept="image/*"
-            multiple
-            required
-          />
         </div>
 
         <button type="submit">Cadastrar</button>

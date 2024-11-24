@@ -1,3 +1,4 @@
+// Função para obter usuários do localStorage
 function getUsers() {
   const users = localStorage.getItem("users");
   return users ? JSON.parse(users) : [];
@@ -10,95 +11,57 @@ function saveUser(user) {
 }
 
 if (document.getElementById("register-form")) {
-  const pontoSim = document.getElementById("ponto-sim");
-  const pontoNao = document.getElementById("ponto-nao");
-  const pontoColetaFields = document.getElementById("ponto-coleta-fields");
-  const imagensEstabelecimento = document.getElementById(
-    "imagens-estabelecimento"
-  );
-
-  pontoSim.addEventListener("change", togglePontoColetaFields);
-  pontoNao.addEventListener("change", togglePontoColetaFields);
-
-  function togglePontoColetaFields() {
-    if (pontoSim.checked) {
-      pontoColetaFields.style.display = "block";
-
-      setPontoColetaFieldsRequired(true);
-    } else {
-      pontoColetaFields.style.display = "none";
-
-      setPontoColetaFieldsRequired(false);
-    }
-  }
-
-  function setPontoColetaFieldsRequired(isRequired) {
-    document.getElementById("estabelecimento-nome").required = isRequired;
-    document.getElementById("estabelecimento-endereco").required = isRequired;
-    document.getElementById("estabelecimento-cep").required = isRequired;
-    document.getElementById("tipo-ponto").required = isRequired;
-    imagensEstabelecimento.required = isRequired;
-  }
-
   document
     .getElementById("register-form")
     .addEventListener("submit", function (e) {
       e.preventDefault();
+      const name = document.getElementById("register-name").value;
       const email = document.getElementById("register-email").value;
       const password = document.getElementById("register-password").value;
+      const confirmPassword = document.getElementById(
+        "register-confirm-password"
+      ).value;
+      const isPontoColeta = document.getElementById("ponto-sim").checked;
 
-      let pontoColeta = null;
-      if (pontoSim.checked) {
-        const nome = document.getElementById("estabelecimento-nome").value;
-        const endereco = document.getElementById(
-          "estabelecimento-endereco"
-        ).value;
-        const cep = document.getElementById("estabelecimento-cep").value;
-        const tipoPonto = document.getElementById("tipo-ponto").value;
-
-        const imagens = imagensEstabelecimento.files;
-        if (imagens.length !== 4) {
-          alert(
-            "Por favor, selecione exatamente 4 imagens do estabelecimento."
-          );
-          return;
-        }
-
-        const imagensArray = [];
-        let imagensProcessadas = 0;
-
-        for (let i = 0; i < imagens.length; i++) {
-          const leitorDeArquivos = new FileReader();
-          leitorDeArquivos.onload = function (e) {
-            imagensArray.push(e.target.result);
-            imagensProcessadas++;
-            if (imagensProcessadas === imagens.length) {
-              pontoColeta = {
-                nome,
-                endereco,
-                cep,
-                tipoPonto,
-                imagens: imagensArray,
-              };
-              realizarCadastro();
-            }
-          };
-          leitorDeArquivos.readAsDataURL(imagens[i]);
-        }
-      } else {
-        realizarCadastro();
+      if (password !== confirmPassword) {
+        alert("As senhas não correspondem. Por favor, tente novamente.");
+        return;
       }
 
-      function realizarCadastro() {
-        mockRegisterAPI(email, password, pontoColeta).then((response) => {
-          alert(response.message);
-          if (response.success) {
-            document.getElementById("register-form").reset();
-            window.location.href = "/frontend/pages/home/";
-          }
-        });
-      }
+      const userData = {
+        name,
+        email,
+        password,
+        isPontoColeta,
+      };
+
+      realizarCadastro(userData);
     });
+}
+
+function realizarCadastro(userData) {
+  mockRegisterAPI(userData).then((response) => {
+    alert(response.message);
+    if (response.success) {
+      document.getElementById("register-form").reset();
+      window.location.href = "/frontend/pages/home/";
+    }
+  });
+}
+
+function mockRegisterAPI(userData) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const users = getUsers();
+      const userExists = users.find((user) => user.email === userData.email);
+      if (userExists) {
+        resolve({ success: false, message: "Usuário já cadastrado." });
+      } else {
+        saveUser(userData);
+        resolve({ success: true, message: "Cadastro realizado com sucesso!" });
+      }
+    }, 500);
+  });
 }
 
 if (document.getElementById("login-form")) {
@@ -112,26 +75,11 @@ if (document.getElementById("login-form")) {
       mockLoginAPI(email, password).then((response) => {
         alert(response.message);
         if (response.success) {
+          localStorage.setItem("currentUserEmail", email);
           window.location.href = "/frontend/pages/home/";
         }
       });
     });
-}
-
-function mockRegisterAPI(email, password, pontoColeta) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const users = getUsers();
-      const userExists = users.find((user) => user.email === email);
-      if (userExists) {
-        resolve({ success: false, message: "Usuário já cadastrado." });
-      } else {
-        const newUser = { email, password, pontoColeta };
-        saveUser(newUser);
-        resolve({ success: true, message: "Cadastro realizado com sucesso!" });
-      }
-    }, 500);
-  });
 }
 
 function mockLoginAPI(email, password) {
